@@ -1,3 +1,5 @@
+![BuildStatus](https://github.com/IJbeasley/HW4-Clustering/workflows/Assignment%20Tests/badge.svg) 
+
 # Assignment 4
 Implementation of KMeans and Silhouette Scoring
 
