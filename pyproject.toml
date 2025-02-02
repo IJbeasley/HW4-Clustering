@@ -4,6 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+testpaths = ["tests"]
 
 [project]
 name = "clustering"
@@ -25,3 +26,4 @@ dependencies = [
 
 [project.urls]
 Home = "https://github.com/IJbeasley/HW4-Clustering"
+
