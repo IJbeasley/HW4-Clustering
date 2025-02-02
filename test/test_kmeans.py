@@ -1,6 +1,6 @@
 # Write your k-means unit tests here
 import pytest
-from cluster import kmeans.KMeans
+from cluster import kmeans
 
 
 def invalid_k_init():
