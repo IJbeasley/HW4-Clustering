@@ -23,7 +23,13 @@ class KMeans:
         """
         
         if k < 1: 
-          raise ValueError("The number of requested clusters (k) must be more than 1.")
+          raise ValueError("The number of requested clusters (k) must be a positive integer >= 1.")
+        
+        if tol <= 0:
+            raise ValueError("The minimum error tolerance (tol) must be positive")
+          
+        if max_iter < 1:
+            raise ValueError("The maximum number of iterations (max_iter) must be a positive integer >= 1.")
 
         
         
@@ -47,12 +53,17 @@ class KMeans:
         n_observations = mat.shape[0]
         n_features = mat.shape[1]
         
+        if n_observations <= 1 or n_features < 1:
+            raise ValueError("Check input matrix: the number of observations (rows) should be > 1 " + 
+                             "and the number of features should be >= 1.")
+        
         # is there sufficent number of observations for 
         # the number of requested clusters
-        if k > n_observations:
+        if self.k > n_observations:
            raise ValueError("The number of requested clusters" + k + 
                             "is > than the number of observations (rows) in mat " + mat.shape[0]
                             )
+
         
         # Check in case user has put  
         if n_observations < n_features: 
@@ -60,6 +71,8 @@ class KMeans:
                          " is greater than the number of observations"  + n_observations + 
                          " in provided mat. " + 
                          "Check that the rows in mat correspond to observations.")
+                         
+        
                          
         # Initialize m to k random values
         # For each data point x, find the closest m_i.
