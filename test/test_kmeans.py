@@ -34,7 +34,23 @@ def invalid_tol_init():
     except ValueError as e:
       assert str(e) == "The minimum error tolerance (tol) must be positive",  "Problem: wrong error"
       
+def invalid_max_iter():
+    """
+    
+    Unit test to check whether Kmeans initalisation correctly fails when max_iter=0 is provided
+    
+    """
+    
+    try:
+      KMeans(k=2, max_iter=0)
+      
+      assert False,  "Problem: no error"
+
+    except ValueError as e:
+      assert str(e) == "The maximum number of iterations (max_iter) must be a positive integer >= 1."  
+      
   
-  
+# next test to add: 
+# wrong sized matrix 
   
   
