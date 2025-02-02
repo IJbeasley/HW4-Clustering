@@ -22,6 +22,7 @@ class KMeans:
                 the maximum number of iterations before quitting model fit
         """
         
+        # Check that requested values of k, tol, and max_iter are valid: 
         if k < 1: 
           raise ValueError("The number of requested clusters (k) must be a positive integer >= 1.")
         
@@ -30,6 +31,11 @@ class KMeans:
           
         if max_iter < 1:
             raise ValueError("The maximum number of iterations (max_iter) must be a positive integer >= 1.")
+        
+        # Add these values to self object
+        self.k = k
+        self.tol = tol
+        self.max_iter = max_iter
 
         
         
@@ -74,7 +80,30 @@ class KMeans:
                          
         
                          
-        # Initialize m to k random values
+        # Initialize centriods: 
+        # by randomly picking k observations as our centriods
+        rng = np.random.default_rng()
+        centriods = rng.integers(low=0, 
+                                 high=n_observations, 
+                                 size=k
+                                 )
+        centriods = mat[centriods,]
+        
+        # Initialize iteration number
+        iter = 0 
+        
+        # Initialize error value
+        error = float('inf')
+        
+        # Calculate distance of each observation to each centroid
+        euclid_dist = cdist(mat, centriods, 'euclidean')
+        # For each observation, find the closests centriod
+        cluster_ids = np.argmin(euclid_dist, axis = 1)
+        
+        
+        print(cluster_ids)
+                                 
+                                 
         # For each data point x, find the closest m_i.
         # Compute new m_i’s to be the centroid (average) of the closest points found in (2).
         #Compute max change in an m_i from the previous m_i.
