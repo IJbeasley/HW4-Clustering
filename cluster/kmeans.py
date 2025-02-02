@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.spatial.distance import cdist
+import warnings
 
 
 class KMeans:
@@ -20,6 +21,12 @@ class KMeans:
             max_iter: int
                 the maximum number of iterations before quitting model fit
         """
+        
+        if k < 1: 
+          raise ValueError("The number of requested clusters (k) must be more than 1.")
+
+        
+        
 
     def fit(self, mat: np.ndarray):
         """
@@ -36,6 +43,31 @@ class KMeans:
             mat: np.ndarray
                 A 2D matrix where the rows are observations and columns are features
         """
+        
+        n_observations = mat.shape[0]
+        n_features = mat.shape[1]
+        
+        # is there sufficent number of observations for 
+        # the number of requested clusters
+        if k > n_observations:
+           raise ValueError("The number of requested clusters" + k + 
+                            "is > than the number of observations (rows) in mat " + mat.shape[0]
+                            )
+        
+        # Check in case user has put  
+        if n_observations < n_features: 
+           warnings.warn("The number of features" + n_features +  
+                         " is greater than the number of observations"  + n_observations + 
+                         " in provided mat. " + 
+                         "Check that the rows in mat correspond to observations.")
+                         
+        # Initialize m to k random values
+        # For each data point x, find the closest m_i.
+        # Compute new m_i’s to be the centroid (average) of the closest points found in (2).
+        #Compute max change in an m_i from the previous m_i.
+        #Repeat (2) through (4) until the change in centroid is less than some epsilon.
+
+        
 
     def predict(self, mat: np.ndarray) -> np.ndarray:
         """
