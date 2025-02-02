@@ -56,6 +56,10 @@ class KMeans:
                 A 2D matrix where the rows are observations and columns are features
         """
         
+        if mat.ndim != 2:
+           
+           raise ValueError("Provided mat should be a 2D matrix")
+             
         n_observations = mat.shape[0]
         n_features = mat.shape[1]
         
@@ -80,14 +84,14 @@ class KMeans:
                          
         
                          
-        # Initialize centriods: 
-        # by randomly picking k observations as our centriods
+        # Initialize centroids: 
+        # by randomly picking k observations as our centroids
         rng = np.random.default_rng()
-        centriods = rng.integers(low=0, 
+        centroids = rng.integers(low=0, 
                                  high=n_observations, 
                                  size=k
                                  )
-        centriods = mat[centriods,]
+        centroids = mat[centroids,]
         
         # Initialize iteration number
         iter = 0 
@@ -95,10 +99,21 @@ class KMeans:
         # Initialize error value
         error = float('inf')
         
-        # Calculate distance of each observation to each centroid
-        euclid_dist = cdist(mat, centriods, 'euclidean')
-        # For each observation, find the closests centriod
-        cluster_ids = np.argmin(euclid_dist, axis = 1)
+        while iter < max_iter: # & error > tol:
+        
+              # Calculate distance of each observation to each centroids
+              euclid_dist = cdist(mat, centroids, 'euclidean')
+              # For each observation, find the closests centriod
+              cluster_ids = np.argmin(euclid_dist, axis = 1)
+        
+        
+             # find new centroids to be the average of the clustered points
+             for cluster in range(1, self.k):
+                 cluster_obs = np.where(arr == cluster_ids)[0]
+                 centroids[cluster -1,] = np.mean(mat[cluster_obs,], axis = 0)
+            
+            iter += 1
+        
         
         
         print(cluster_ids)
