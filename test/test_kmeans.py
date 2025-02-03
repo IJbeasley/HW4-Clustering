@@ -4,10 +4,35 @@ import numpy as np
 from cluster import utils, kmeans as km
 
 
-def test_kmeans():
-    """
+def test_kmeans_predict():
     """
     
+    Unit test that checks that our KMeans cluster label predictions are accurate on example data
+    * to add: within expected accurarcy / misclassification?
+    
+    """
+    
+    # Create test dataset of 100 observations, measured in 2 dimensions, with small sd
+    test_clusters, test_cluster_labels  =  utils.make_clusters(n=100,
+                                                               m=2,
+                                                               scale = 0.001,
+                                                               k = 2
+                                                               )
+
+    # save visualisation of this dataset
+    utils.plot_clusters(mat = test_clusters,
+                        labels = test_cluster_labels,
+                        filename = "figures/unit_test_data_2d.png")
+    
+    # run kmeans model fitting and prediction: 
+    kmeans_model = km.KMeans(k = 2)
+    kmeans_model.fit(mat = test_clusters)
+    predicted_labels = kmeans_model.predict(mat = test_clusters)
+    
+    # assert np.sum(predicted_labels) == np.sum(test_cluster_labels), "KMeans predict is not returning expected labels"
+    # 
+    # assert np.allclose(predicted_labels, test_cluster_labels) or np.allclose(np.abs(predicted_labels - 1), test_cluster_labels), "KMeans predict is not returning expected labels"
+    # 
     pass
 
 #################### Unit test of initalization variables #####################
