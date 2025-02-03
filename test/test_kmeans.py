@@ -1,7 +1,7 @@
 # Write your k-means unit tests here
 import pytest
 import numpy as np
-from cluster import utils, kmeans
+from cluster import utils, kmeans as km
 
 
 def test_kmeans():
@@ -12,7 +12,7 @@ def test_kmeans():
 
 #################### Unit test of initalization variables #####################
 
-def invalid_k_init():
+def test_invalid_k_init():
     """
     
     Unit test to check whether KMeans initalisation correctly fails when k=0 is provided. 
@@ -21,14 +21,14 @@ def invalid_k_init():
     
     try:
       
-      KMeans(k = 0)
+      km.KMeans(k = 0)
       assert False, "Problem: no error"
     
     except ValueError as e:
       assert str(e) == "The number of requested clusters (k) must be a positive integer >= 1.", "Problem: wrong error"
       
   
-def invalid_tol_init():
+def test_invalid_tol_init():
     """
     
     Unit test to check whether Kmeans initalisation correctly fails when tol=0 is provided
@@ -36,14 +36,14 @@ def invalid_tol_init():
     """
     
     try: 
-      KMeans(k=2, tol=0)
+      km.KMeans(k=2, tol=0)
       
       assert False, "Problem: no error"
     
     except ValueError as e:
       assert str(e) == "The minimum error tolerance (tol) must be positive",  "Problem: wrong error"
       
-def invalid_max_iter():
+def test_invalid_max_iter():
     """
     
     Unit test to check whether Kmeans initalisation correctly fails when max_iter=0 is provided
@@ -51,7 +51,7 @@ def invalid_max_iter():
     """
     
     try:
-      KMeans(k=2, max_iter=0)
+      km.KMeans(k=2, max_iter=0)
       
       assert False,  "Problem: no error"
 
@@ -60,7 +60,7 @@ def invalid_max_iter():
       
 ##################### Unit tests of valid matrix format #######################
 
-def invalid_mat_dim():
+def test_invalid_mat_dim():
      """
      
      Unit test to check whether Kmeans fitting correctly fails when provided matrix dimensions are
@@ -76,7 +76,7 @@ def invalid_mat_dim():
      #   kmeans.fit()
      
   
-def incompatible_mat_k():
+def test_incompatible_mat_k():
      """
      
      Unit test to check whether Kmeans fitting correctly fails when requested number of clusters is > 
