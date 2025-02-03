@@ -59,18 +59,21 @@ class KMeans:
         if mat.ndim != 2:
            
            raise ValueError("Provided mat should be a 2D matrix")
+         
+        
+        # To add: check mat is not empty
              
         n_observations = mat.shape[0]
         n_features = mat.shape[1]
         
-        if n_observations <= 1 or n_features < 1:
+        if n_observations < 1 or n_features < 1:
             raise ValueError("Check input matrix: the number of observations (rows) should be > 1 " + 
                              "and the number of features should be >= 1.")
         
         # is there sufficent number of observations for 
         # the number of requested clusters
         if self.k > n_observations:
-           raise ValueError("The number of requested clusters" + k + 
+           raise ValueError("The number of requested clusters" + self.k + 
                             "is > than the number of observations (rows) in mat " + mat.shape[0]
                             )
 
@@ -89,9 +92,13 @@ class KMeans:
         rng = np.random.default_rng()
         centroids = rng.integers(low=0, 
                                  high=n_observations, 
-                                 size=k
+                                 size=self.k
                                  )
+        
+        # print(centroids)                         
         centroids = mat[centroids,]
+        
+        # print(centroids)
         
         # Initialize iteration number
         iter = 0 
@@ -99,24 +106,30 @@ class KMeans:
         # Initialize error value
         error = float('inf')
         
-        while iter < max_iter: # & error > tol:
+        while iter < self.max_iter: # & error > tol:
         
               # Calculate distance of each observation to each centroids
               euclid_dist = cdist(mat, centroids, 'euclidean')
-              # For each observation, find the closests centriod
+              # For each observation, find the closests centroid
               cluster_ids = np.argmin(euclid_dist, axis = 1)
+              # print(cluster_ids)
         
         
              # find new centroids to be the average of the clustered points
               for cluster in range(1, self.k):
-                  cluster_obs = np.where(arr == cluster_ids)[0]
-                  centroids[cluster -1,] = np.mean(mat[cluster_obs,], axis = 0)
+                  cluster_obs = np.where(cluster_ids == cluster)[0]
+                  centroids[cluster,] = np.mean(mat[cluster_obs,], axis = 0)
             
               iter += 1
+              
+              # print(centroids)
+              # raise ValueError("testing")
         
         
         
-        print(cluster_ids)
+        #print(cluster_ids)
+        
+        self.centroids = centroids
                                  
                                  
         # For each data point x, find the closest m_i.
@@ -142,6 +155,27 @@ class KMeans:
             np.ndarray
                 a 1D array with the cluster label for each of the observations in `mat`
         """
+        
+        # check that fit has been run
+        if self.centroids is None:
+           raise ValueError("fit method needs to be applied before predict can be run")
+        
+        # check mat has correct dimensions
+        if mat.ndim != 2:
+           raise ValueError("Provided mat should be a 2D matrix")
+         
+        # check mat is not empty
+        if mat.shape[0] < 1 or mat.shape[1] < 1:
+            raise ValueError("Check input matrix: the number of observations (rows) should be >= 1 " + 
+                             "and the number of features should be >= 1.") 
+         
+        if mat.shape[1] != self.centroids.shape[1]:
+           raise ValueError("The features in mat should correspond to the features used to fit the model")
+        
+        euclid_dist = cdist(mat, self.centroids, 'euclidean')
+        cluster_ids = np.argmin(euclid_dist, axis = 1)
+        
+        return cluster_ids
 
     def get_error(self) -> float:
         """
