@@ -1,7 +1,16 @@
 # Write your k-means unit tests here
 import pytest
-from cluster import kmeans
+import numpy as np
+from cluster import utils, kmeans
 
+
+def test_kmeans():
+    """
+    """
+    
+    pass
+
+#################### Unit test of initalization variables #####################
 
 def invalid_k_init():
     """
@@ -49,8 +58,33 @@ def invalid_max_iter():
     except ValueError as e:
       assert str(e) == "The maximum number of iterations (max_iter) must be a positive integer >= 1."  
       
+##################### Unit tests of valid matrix format #######################
+
+def invalid_mat_dim():
+     """
+     
+     Unit test to check whether Kmeans fitting correctly fails when provided matrix dimensions are
+     inappropriate (e.g. 3D rather than 2D)
+     
+     """
+     pass
+     
+     #test_mat = 
+     
+     # try:
+     #   kmeans = KMeans(k=2)
+     #   kmeans.fit()
+     
   
-# next test to add: 
-# wrong sized matrix 
-  
-  
+def incompatible_mat_k():
+     """
+     
+     Unit test to check whether Kmeans fitting correctly fails when requested number of clusters is > 
+     number of observations in provided matrix (mat).
+     
+     
+     """
+     
+     pass
+   
+   
