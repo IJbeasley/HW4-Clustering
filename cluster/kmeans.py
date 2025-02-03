@@ -108,11 +108,11 @@ class KMeans:
         
         
              # find new centroids to be the average of the clustered points
-             for cluster in range(1, self.k):
-                 cluster_obs = np.where(arr == cluster_ids)[0]
-                 centroids[cluster -1,] = np.mean(mat[cluster_obs,], axis = 0)
+              for cluster in range(1, self.k):
+                  cluster_obs = np.where(arr == cluster_ids)[0]
+                  centroids[cluster -1,] = np.mean(mat[cluster_obs,], axis = 0)
             
-            iter += 1
+              iter += 1
         
         
         
