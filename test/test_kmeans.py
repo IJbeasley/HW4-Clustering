@@ -15,7 +15,7 @@ def test_kmeans_predict():
     # Create test dataset of 100 observations, measured in 2 dimensions, with small sd
     test_clusters, test_cluster_labels  =  utils.make_clusters(n=100,
                                                                m=2,
-                                                               scale = 0.001,
+                                                               scale = 0.1,
                                                                k = 2
                                                                )
 
@@ -25,7 +25,7 @@ def test_kmeans_predict():
                         filename = "figures/unit_test_data_2d.png")
     
     # run kmeans model fitting and prediction: 
-    kmeans_model = km.KMeans(k = 2)
+    kmeans_model = km.KMeans(k = 2, max_iter = 5)
     kmeans_model.fit(mat = test_clusters)
     predicted_labels = kmeans_model.predict(mat = test_clusters)
     
