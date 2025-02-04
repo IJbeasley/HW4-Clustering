@@ -95,10 +95,8 @@ class KMeans:
                                  size=self.k
                                  )
         
-        # print(centroids)                         
+        centroids = [40, 52]
         centroids = mat[centroids,]
-        
-        # print(centroids)
         
         # Initialize iteration number
         iter = 0 
@@ -106,37 +104,44 @@ class KMeans:
         # Initialize error value
         error = float('inf')
         
-        while iter < self.max_iter: # & error > tol:
+        iter_difference = np.zeros(self.k)
+        
+        while iter < self.max_iter and error > self.tol:
         
               # Calculate distance of each observation to each centroids
               euclid_dist = cdist(mat, centroids, 'euclidean')
+
               # For each observation, find the closests centroid
               cluster_ids = np.argmin(euclid_dist, axis = 1)
-              # print(cluster_ids)
         
-        
-             # find new centroids to be the average of the clustered points
-              for cluster in range(1, self.k):
+              # store old centroids
+              old_centroids = centroids.copy()
+             
+              #find new centroids to be the average of the clustered points
+              for cluster in range(0, self.k):
                   cluster_obs = np.where(cluster_ids == cluster)[0]
                   centroids[cluster,] = np.mean(mat[cluster_obs,], axis = 0)
-            
-              iter += 1
               
-              # print(centroids)
-              # raise ValueError("testing")
-        
-        
-        
-        #print(cluster_ids)
-        
-        self.centroids = centroids
-                                 
-                                 
-        # For each data point x, find the closest m_i.
-        # Compute new m_i’s to be the centroid (average) of the closest points found in (2).
-        #Compute max change in an m_i from the previous m_i.
-        #Repeat (2) through (4) until the change in centroid is less than some epsilon.
+              # calculate the max difference between the new and old centroids
+              for cluster in range(0, self.k):
 
+                  # calculate mean squared difference
+                  diff = (centroids[cluster,] - old_centroids[cluster,])**2
+                  iter_difference[cluster] = diff.mean()
+            
+              error = np.max(iter_difference).copy()
+              print(error)
+                 
+              iter += 1
+        
+        # 
+        # raise ValueError("Ok ok ok ") 
+      
+        self.centroids = centroids
+        self.error = error
+        self.n_iter = iter
+        
+                                 
         
 
     def predict(self, mat: np.ndarray) -> np.ndarray:
@@ -186,6 +191,8 @@ class KMeans:
             float
                 the squared-mean error of the fit model
         """
+        
+        return self.error
 
     def get_centroids(self) -> np.ndarray:
         """
@@ -195,3 +202,5 @@ class KMeans:
             np.ndarray
                 a `k x m` 2D matrix representing the cluster centroids of the fit model
         """
+        
+        return self.centroids
