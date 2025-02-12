@@ -3,11 +3,16 @@ from scipy.spatial.distance import cdist
 
 
 class Silhouette:
-    def __init__(self):
+    def __init__(self, metric: str = "euclidean"):
         """
         inputs:
-            none
+            metric: As per sklearn.metrics.silhouette_score, 
+            'The metric to use when calculating distance between instances in a feature array.
+            Must be one of the options allowed by sklearn.metrics.pairwise_distances'
+
         """
+        
+        self.metric = metric
 
     def score(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
@@ -28,6 +33,7 @@ class Silhouette:
   
         # What are the clusters?
         cluster_labels = np.unique(y)
+        cluster_labels = np.sort(cluster_labels)
       
         # Match each observation to a cluster
         cluster_dict = {
@@ -36,7 +42,7 @@ class Silhouette:
 
                      
         # Find the distance between every point in this dataset 
-        all_distances = cdist(X, X)
+        all_distances = cdist(X, X, metric = self.metric)
       
         # Initialize a matrix of average distance to points in a cluster, per point: 
         avg_clust_distance = np.zeros(
@@ -48,6 +54,8 @@ class Silhouette:
                      
         # For a given point, calculate silhoutte score: 
         for observation in range(0, len(y)):
+            
+            observation_cluster = y[observation]
       
             # Calculate the mean distance from this point to points for each cluster
             for cluster_id in cluster_labels: 
@@ -58,12 +66,16 @@ class Silhouette:
                 # (don't care about the distance between a point and itself)
                 if observation in cluster_points:
                  
-                   cluster_points.remove(observation)
-              
+                   #cluster_points.remove(observation)
+                   cluster_points = [p for p in cluster_points if p != observation]
+
                 # How far is observation from points in this cluster on average?
-                avg_clust_distance[observation, cluster_id] = all_distances[observation, cluster_points].mean()
+                # If the only point in this cluster is the observation, then avg_cluster_distance is 0
+                if not cluster_points:
+                   avg_clust_distance[observation, cluster_id] = 0
+                else:
+                  avg_clust_distance[observation, cluster_id] = all_distances[observation, cluster_points].mean()
           
-            observation_cluster = y[observation]
           
             # How far is that point from other points in the same cluster (on average)?
             # Intra-cluster distance from this point:
@@ -77,22 +89,11 @@ class Silhouette:
                                   )
           
             min_inter_dist = inter_dist.min()
-          
+            
             score[observation] = (min_inter_dist - intra_dist) / max(min_inter_dist, intra_dist)
-      
+        
         return score
-                                 
-          
-          # 
-          # 
-          # 
-          # intra_dist = all_distances[observation, cluster].mean()
-          # 
-          # # intra_dist = cdist(X[observation, ], 
-          #                    np.delete(X[cluster,], observation, axis = 0)
-          #                    )
-          #                    
-          # mean_intra_dist = intra_dist.mean()
+
           
 
           
