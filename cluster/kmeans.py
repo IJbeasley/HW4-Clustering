@@ -4,7 +4,7 @@ import warnings
 
 
 class KMeans:
-    def __init__(self, k: int, tol: float = 1e-6, max_iter: int = 100):
+    def __init__(self, k: int, tol: float = 1e-6, max_iter: int = 100, seed: int = 42):
         """
         In this method you should initialize whatever attributes will be required for the class.
 
@@ -36,6 +36,7 @@ class KMeans:
         self.k = k
         self.tol = tol
         self.max_iter = max_iter
+        self._seed = seed
 
         
         
@@ -73,15 +74,15 @@ class KMeans:
         # is there sufficent number of observations for 
         # the number of requested clusters
         if self.k > n_observations:
-           raise ValueError("The number of requested clusters" + self.k + 
-                            "is > than the number of observations (rows) in mat " + mat.shape[0]
+           raise ValueError("The number of requested clusters" + str(self.k) + 
+                            "is > than the number of observations (rows) in mat " + str(mat.shape[0])
                             )
 
         
         # Check in case user has put  
         if n_observations < n_features: 
-           warnings.warn("The number of features" + n_features +  
-                         " is greater than the number of observations"  + n_observations + 
+           warnings.warn("The number of features" + str(n_features) +  
+                         " is greater than the number of observations"  + str(n_observations) + 
                          " in provided mat. " + 
                          "Check that the rows in mat correspond to observations.")
                          
@@ -89,13 +90,12 @@ class KMeans:
                          
         # Initialize centroids: 
         # by randomly picking k observations as our centroids
-        rng = np.random.default_rng()
+        rng = np.random.default_rng(self._seed)
         centroids = rng.integers(low=0, 
                                  high=n_observations, 
                                  size=self.k
                                  )
         
-        centroids = [40, 52]
         centroids = mat[centroids,]
         
         # Initialize iteration number
@@ -130,13 +130,9 @@ class KMeans:
                   iter_difference[cluster] = diff.mean()
             
               error = np.max(iter_difference).copy()
-              print(error)
                  
               iter += 1
         
-        # 
-        # raise ValueError("Ok ok ok ") 
-      
         self.centroids = centroids
         self.error = error
         self.n_iter = iter
