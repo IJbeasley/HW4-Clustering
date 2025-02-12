@@ -133,8 +133,8 @@ class KMeans:
                  
               iter += 1
         
-        self.centroids = centroids
-        self.error = error
+        self._centroids = centroids
+        self._error = error
         self.n_iter = iter
         
                                  
@@ -158,7 +158,7 @@ class KMeans:
         """
         
         # check that fit has been run
-        if self.centroids is None:
+        if self._centroids is None:
            raise ValueError("fit method needs to be applied before predict can be run")
         
         # check mat has correct dimensions
@@ -170,10 +170,10 @@ class KMeans:
             raise ValueError("Check input matrix: the number of observations (rows) should be >= 1 " + 
                              "and the number of features should be >= 1.") 
          
-        if mat.shape[1] != self.centroids.shape[1]:
+        if mat.shape[1] != self._centroids.shape[1]:
            raise ValueError("The features in mat should correspond to the features used to fit the model")
         
-        euclid_dist = cdist(mat, self.centroids, 'euclidean')
+        euclid_dist = cdist(mat, self._centroids, 'euclidean')
         cluster_ids = np.argmin(euclid_dist, axis = 1)
         
         return cluster_ids
@@ -188,7 +188,7 @@ class KMeans:
                 the squared-mean error of the fit model
         """
         
-        return self.error
+        return self._error
 
     def get_centroids(self) -> np.ndarray:
         """
@@ -199,4 +199,4 @@ class KMeans:
                 a `k x m` 2D matrix representing the cluster centroids of the fit model
         """
         
-        return self.centroids
+        return self._centroids
