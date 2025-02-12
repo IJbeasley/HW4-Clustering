@@ -26,60 +26,61 @@ class Silhouette:
         """
         
   
-      # What are the clusters?
-      cluster_labels = np.unique(y)
+        # What are the clusters?
+        cluster_labels = np.unique(y)
       
-      # Match each observation to a cluster
-      cluster_dict = {
-                      label: np.where(y == label)[0].tolist() for label in cluster_labels
-                      }
+        # Match each observation to a cluster
+        cluster_dict = {
+                        label: np.where(y == label)[0].tolist() for label in cluster_labels
+                       }
 
                      
-      # Find the distance between every point in this dataset 
-      all_distances = cdist(X, X)
+        # Find the distance between every point in this dataset 
+        all_distances = cdist(X, X)
       
-      # Initialize a matrix of average distance to points in a cluster, per point: 
-      avg_clust_distance = np.zeros(
-                                    (len(y), len(cluster_labels))
-                                   )
+        # Initialize a matrix of average distance to points in a cluster, per point: 
+        avg_clust_distance = np.zeros(
+                                     (len(y), len(cluster_labels))
+                                     )
       
-      # Initialize array of silhoutte scores
-      score = np.zeros(len(y))
+        # Initialize array of silhoutte scores
+        score = np.zeros(len(y))
                      
-      # For a given point, calculate silhoutte score: 
-      for observation in range(0, len(y)):
+        # For a given point, calculate silhoutte score: 
+        for observation in range(0, len(y)):
       
-      # Calculate the mean distance from this point to points for each cluster
-          for cluster_id in cluster_labels: 
+            # Calculate the mean distance from this point to points for each cluster
+            for cluster_id in cluster_labels: 
             
-              cluster_points = cluster_dict.get(cluster_id, [])
+                cluster_points = cluster_dict.get(cluster_id, [])
               
-              #if observation is in cluster_points, then remove it from cluster_points
-              if observation in cluster_points:
+                # if observation is in cluster_points, then remove it from cluster_points
+                # (don't care about the distance between a point and itself)
+                if observation in cluster_points:
                  
-                 cluster_points.remove(observation)
+                   cluster_points.remove(observation)
               
-              # How far is observation from points in this cluster on average?
-              avg_clust_distance[observation, cluster_id] = all_distances[observation, cluster_points].mean()
+                # How far is observation from points in this cluster on average?
+                avg_clust_distance[observation, cluster_id] = all_distances[observation, cluster_points].mean()
           
-          observation_cluster = y[observation]
+            observation_cluster = y[observation]
           
-          # How far is that point from other points in the same cluster (on average)?
-          # Intra-cluster distance from this point:
-          intra_dist = avg_clust_distance[observation, observation_cluster]
+            # How far is that point from other points in the same cluster (on average)?
+            # Intra-cluster distance from this point:
+            intra_dist = avg_clust_distance[observation, observation_cluster]
           
-          # How far is the smallest mean distance to a different cluster?
-          # Inter-cluster distance from this point: 
-          inter_dist = np.delete(
-                                 avg_clust_distance[observation], 
-                                 observation_cluster
-                                 )
+            # How far is the smallest mean distance to a different cluster?
+            # Inter-cluster distance from this point: 
+            inter_dist = np.delete(
+                                   avg_clust_distance[observation], 
+                                   observation_cluster
+                                  )
           
-          min_inter_dist = inter_dist.min()
+            min_inter_dist = inter_dist.min()
           
-          score[observation] = (min_inter_dist - intra_dist) / max(min_inter_dist, intra_dist)
+            score[observation] = (min_inter_dist - intra_dist) / max(min_inter_dist, intra_dist)
       
-      return score
+        return score
                                  
           
           # 
