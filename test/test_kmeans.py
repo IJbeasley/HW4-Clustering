@@ -13,6 +13,7 @@ def test_kmeans_predict():
     """
 
     # Create test dataset of 100 observations, measured in 2 dimensions, with small sd
+    # Choosing 2D deliberately - easier to cluster
     test_clusters, test_cluster_labels  =  utils.make_clusters(n=100,
                                                                m=2,
                                                                scale = 0.1,
@@ -29,11 +30,11 @@ def test_kmeans_predict():
     kmeans_model.fit(mat = test_clusters)
     predicted_labels = kmeans_model.predict(mat = test_clusters)
 
-    # assert np.sum(predicted_labels) == np.sum(test_cluster_labels), "KMeans predict is not returning expected labels"
-    #
-    # assert np.allclose(predicted_labels, test_cluster_labels) or np.allclose(np.abs(predicted_labels - 1), test_cluster_labels), "KMeans predict is not returning expected labels"
-    #
-    pass
+    assert np.sum(predicted_labels) == np.sum(test_cluster_labels), "KMeans predict is not returning expected labels"
+
+    assert np.allclose(predicted_labels, test_cluster_labels) or np.allclose(np.abs(predicted_labels - 1), test_cluster_labels), "KMeans predict is not returning expected labels"
+
+
 
 #################### Unit test of initalization variables #####################
 
