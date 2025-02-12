@@ -26,18 +26,19 @@ class Silhouette:
         """
         
   
-      
+      # What are the clusters?
       cluster_labels = np.unique(y)
       
+      # Match each observation to a cluster
       cluster_dict = {
                       label: np.where(y == label)[0].tolist() for label in cluster_labels
                       }
 
                      
-      # Distance between every point in this dataset 
+      # Find the distance between every point in this dataset 
       all_distances = cdist(X, X)
       
-      # Initialize matrix of average distance to points in a cluster, per point: 
+      # Initialize a matrix of average distance to points in a cluster, per point: 
       avg_clust_distance = np.zeros(
                                     (len(y), len(cluster_labels))
                                    )
@@ -45,7 +46,7 @@ class Silhouette:
       # Initialize array of silhoutte scores
       score = np.zeros(len(y))
                      
-      # For a given point, calculate score: 
+      # For a given point, calculate silhoutte score: 
       for observation in range(0, len(y)):
       
       # Calculate the mean distance from this point to points for each cluster
@@ -56,7 +57,7 @@ class Silhouette:
               #if observation is in cluster_points, then remove it from cluster_points
               if observation in cluster_points:
                  
-                 cluster_points = cluster_points.remove(observation)
+                 cluster_points.remove(observation)
               
               # How far is observation from points in this cluster on average?
               avg_clust_distance[observation, cluster_id] = all_distances[observation, cluster_points].mean()
